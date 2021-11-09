@@ -4,6 +4,7 @@ import Footer from './Footer';
 import BestBooks from './BestBooks';
 import Login from './Login';
 import Profile from './Profile';
+import CreateBook from './CreateBook';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   BrowserRouter as Router,
@@ -49,6 +50,9 @@ class App extends React.Component {
             {/* TODO: add a route with a path of '/profile' that renders a `Profile` component */}
             <Route exact path="/profile">
               {this.state.user ? <Profile user={this.state.user} username={this.state.username} /> : <Login loginHandler={this.loginHandler}/>}
+              </Route>
+              <Route exact path="/create">
+              {this.state.user ? <CreateBook user={this.state.user} username={this.state.username} /> : <Login loginHandler={this.loginHandler}/>}
               </Route>
           </Switch>
           <Footer />
