@@ -73,6 +73,16 @@ Estimate of time needed to complete: 3 Hours
 
 Start time: 2:40pm
 
-Finish time: ________
+Finish time: 6:30pm
+
+Actual time needed to complete: 3:50
+
+Name of feature: Lab 13
+
+Estimate of time needed to complete: _________
+
+Start time: _____
+
+Finish time: _____
 
 Actual time needed to complete: _____
