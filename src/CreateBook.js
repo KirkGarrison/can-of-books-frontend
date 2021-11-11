@@ -4,17 +4,16 @@ import Carousel from "react-bootstrap/Carousel";
 
 export default class CreateBook extends Component {
 
-    handleSubmit = (event) => {
-        event.preventDefault()
-        const title = event.target.formTitle.value
-        const description = event.target.formDescription.value
-        const author = event.target.formAuthor.value
-        const status = event.target.formStatus.value
-        const email = event.target.formEmail.value
-        let newBookObj = { title, description, author, status, email };
-        event.target.reset();
-        this.props.postBooks(newBookObj);
-    }
+    // handleSubmit = (event) => {
+    //     event.preventDefault()
+    //     const title = event.target.formTitle.value
+    //     const description = event.target.formDescription.value
+    //     const author = event.target.formAuthor.value
+    //     const status = event.target.formStatus.value
+    //     let newBookObj = { title, description, author, status,};
+    //     event.target.reset();
+    //     this.props.postBooks(newBookObj);
+    // }
 
     render() {
         return (

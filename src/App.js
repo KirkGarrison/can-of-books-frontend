@@ -38,19 +38,6 @@ class App extends React.Component {
     })
   }
 
-  getBooks = async () => {
-    const url=`${process.env.REACT_APP_SERVER_URL}/books?email=${this.state.user}`
-    let response = await axios.get(url)
-    this.setState ({
-      books: response.data
-    })
-    console.log(this.state.books);
-  }
-
- 
-
-  
-
   render() {
     return (
       <>
@@ -59,14 +46,11 @@ class App extends React.Component {
           <Switch>
             <Route exact path="/">
               {/* TODO: if the user is logged in, render the `BestBooks` component, if they are not, render the `Login` component */}
-              {this.state.user ? <BestBooks email={this.state.user.email} books={this.state.books} getBooks={this.getBooks} deleteBooks={this.deleteBooks}/> : <Login loginHandler={this.loginHandler}/>}
+              {this.state.user ? <BestBooks email={this.state.user} /> : <Login loginHandler={this.loginHandler}/>}
             </Route>
             {/* TODO: add a route with a path of '/profile' that renders a `Profile` component */}
             <Route exact path="/profile">
               {this.state.user ? <Profile user={this.state.user} username={this.state.username} /> : <Login loginHandler={this.loginHandler}/>}
-              </Route>
-              <Route exact path="/create">
-              {this.state.user ? <CreateBook postBooks={this.postBooks} /> : <Login loginHandler={this.loginHandler}/>}
               </Route>
           </Switch>
           <Footer />
