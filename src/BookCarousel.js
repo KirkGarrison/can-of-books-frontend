@@ -13,8 +13,7 @@ export default class BookCarousel extends Component {
         return (
             <Container>
             <Carousel>
-               {this.props.books.map(book => <Carousel.Item key={book._id}><CreateBook deleteBooks={this.props.deleteBooks} book={book}/></Carousel.Item>)}
-                
+               {this.props.books.map(book => <Carousel.Item key={book._id}><CreateBook deleteBooks={this.props.deleteBooks} putBooks={this.props.putBooks} book={book} openUpdateModal={this.props.openUpdateModal} closeUpdateModal={this.props.closeUpdateModal} showUpdateModal={this.props.showUpdateModal}/></Carousel.Item>)}       
             </Carousel>
             </Container>
         )
