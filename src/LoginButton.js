@@ -19,7 +19,7 @@ export default class LoginButton extends Component {
     /* TODO: Render a button with label 'Log In'. When the button is clicked then show LoginForm instead */
     return (
       <>
-      {this.state.clicked ? <LoginForm loginHandler={this.props.loginHandler}/> : <button onClick={this.handleClick}>Log In</button>}
+      <LoginForm /> 
       </>
     )
   }

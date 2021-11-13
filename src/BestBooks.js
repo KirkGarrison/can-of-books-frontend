@@ -3,6 +3,7 @@ import BookCarousel from './BookCarousel';
 import axios from 'axios';
 import AddBookModal from './AddBookModal';
 import AddButton from './AddButton';
+// import { withAuth0 } from '@auth0/auth0-react'
 
 class BestBooks extends React.Component {
   constructor(props) {
@@ -15,34 +16,67 @@ class BestBooks extends React.Component {
   }
 
   getBooks = async () => {
-    const url = `${process.env.REACT_APP_SERVER_URL}/books?email=${this.props.email}`;
-    console.log(url);
-    let results = await axios.get(url);
-    this.setState({ books: results.data })
+    if (this.props.auth0.isAuthenticated) {
+      const res = await this.props.auth0.getIdTokenClaims();
+      const jwt = res.__raw;
+      const config = {
+        headers: { "Authorization": `Bearer ${jwt}` },
+        method: 'get',
+        baseURL: process.env.REACT_APP_SERVER_URL,
+        url: './books'
+      }
+      let bookResults = await axios(config);
+      this.setState({ books: bookResults.data })
+    }
   }
 
-  postBooks = async (newBookObj) => {
-    const url = `${process.env.REACT_APP_SERVER_URL}/books?email=${this.props.email}`;
-    const results = await axios.post(url, newBookObj)
-    let newBooksArr = [...this.state.books, results.data]
-    this.setState({ books: newBooksArr });
+  postBooks = async () => {
+    if (this.props.auth0.isAuthenticated) {
+      const res = await this.props.auth0.getIdTokenClaims();
+      const jwt = res.__raw;
+      const config = {
+        headers: { "Authorization": `Bearer ${jwt}` },
+        method: 'post',
+        baseURL: process.env.REACT_APP_SERVER_URL,
+        url: './books'
+      }
+    let newBooksArr = await axios(config)
+    this.setState({ books: newBooksArr.data });
   }
+}
 
   deleteBooks = async (id) => {
-    const url = `${process.env.REACT_APP_SERVER_URL}/books/${id}?email=${this.props.email}`;
+    if (this.props.auth0.isAuthenticated) {
+      const res = await this.props.auth0.getIdTokenClaims();
+      const jwt = res.__raw;
+      const config = {
+        headers: { "Authorization": `Bearer ${jwt}` },
+        method: 'delete',
+        baseURL: process.env.REACT_APP_SERVER_URL,
+        url: './books'
+      }
     try {
-      await axios.delete(url);
+      await axios.delete(config);
       let filteredBooks = this.state.books.filter(book => book._id !== id);
       this.setState({ books: filteredBooks });
     } catch (e) {
       console.error(e);
     }
   }
+}
 
   putBooks = async (id, updateBookObj) => {
-    const url = `${process.env.REACT_APP_SERVER_URL}/books/${id}?email=${this.props.email}`;
+    if (this.props.auth0.isAuthenticated) {
+      const res = await this.props.auth0.getIdTokenClaims();
+      const jwt = res.__raw;
+      const config = {
+        headers: { "Authorization": `Bearer ${jwt}` },
+        method: 'put',
+        baseURL: process.env.REACT_APP_SERVER_URL,
+        url: './books'
+      }
     try {
-      let results = await axios.put(url, updateBookObj);
+      let results = await axios.put(config, updateBookObj);
       let filteredBooks = this.state.books.filter(book => book._id !== id);
       this.setState({ books: filteredBooks });
       let updatedBooksArr = [...this.state.books, results.data]
@@ -51,6 +85,7 @@ class BestBooks extends React.Component {
       console.error(e);
     }
   }
+}
 
   closeModal = () => {
     this.setState({ showPostModal: false })
@@ -79,11 +114,11 @@ class BestBooks extends React.Component {
         <h2>My Essential Lifelong Learning &amp; Formation Shelf</h2>
 
         {this.state.books.length ? (
-          <BookCarousel books={this.state.books} deleteBooks={this.deleteBooks} putBooks={this.putBooks} openUpdateModal={this.openUpdateModal} closeUpdateModal={this.closeUpdateModal} showUpdateModal={this.state.showUpdateModal}/>
+          <BookCarousel books={this.state.books} deleteBooks={this.deleteBooks} putBooks={this.putBooks} openUpdateModal={this.openUpdateModal} closeUpdateModal={this.closeUpdateModal} showUpdateModal={this.state.showUpdateModal} />
         ) : (
           <h3>No Books Found :(</h3>
         )}
-        <AddButton openModal={this.openModal} user={this.props.user} />
+        <AddButton openModal={this.openModal} />
         <AddBookModal postBooks={this.postBooks} show={this.state.showPostModal} closeModal={this.closeModal} />
       </>
     )
