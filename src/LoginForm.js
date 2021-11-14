@@ -10,9 +10,9 @@ class LoginForm extends Component {
     }
   }
 
-  handleClick = () => {
-    this.props.loginHandler(this.state.user, this.state.username);
-  }
+  // handleClick = () => {
+  //   this.props.loginHandler(this.props.auth0.isAuthenticated);
+  // }
 
   handleChange = (e) => {
     this.setState({ user: e.target.value })
