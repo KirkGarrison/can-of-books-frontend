@@ -3,7 +3,7 @@ import BookCarousel from './BookCarousel';
 import axios from 'axios';
 import AddBookModal from './AddBookModal';
 import AddButton from './AddButton';
-// import { withAuth0 } from '@auth0/auth0-react'
+import { withAuth0 } from '@auth0/auth0-react'
 
 class BestBooks extends React.Component {
   constructor(props) {
@@ -23,14 +23,14 @@ class BestBooks extends React.Component {
         headers: { "Authorization": `Bearer ${jwt}` },
         method: 'get',
         baseURL: process.env.REACT_APP_SERVER_URL,
-        url: './books'
+        url: '/books'
       }
       let bookResults = await axios(config);
       this.setState({ books: bookResults.data })
     }
   }
 
-  postBooks = async () => {
+  postBooks = async (newBookObj) => {
     if (this.props.auth0.isAuthenticated) {
       const res = await this.props.auth0.getIdTokenClaims();
       const jwt = res.__raw;
@@ -38,12 +38,13 @@ class BestBooks extends React.Component {
         headers: { "Authorization": `Bearer ${jwt}` },
         method: 'post',
         baseURL: process.env.REACT_APP_SERVER_URL,
-        url: './books'
+        url: '/books',
+        data: newBookObj
       }
-    let newBooksArr = await axios(config)
-    this.setState({ books: newBooksArr.data });
+      let newBooksArr = await axios(config)
+      this.setState({ books: newBooksArr.data });
+    }
   }
-}
 
   deleteBooks = async (id) => {
     if (this.props.auth0.isAuthenticated) {
@@ -53,17 +54,20 @@ class BestBooks extends React.Component {
         headers: { "Authorization": `Bearer ${jwt}` },
         method: 'delete',
         baseURL: process.env.REACT_APP_SERVER_URL,
-        url: './books'
+        url: '/books',
+        params: {
+          id: id
+        }
       }
-    try {
-      await axios.delete(config);
-      let filteredBooks = this.state.books.filter(book => book._id !== id);
-      this.setState({ books: filteredBooks });
-    } catch (e) {
-      console.error(e);
+      try {
+        await axios.delete(config);
+        let filteredBooks = this.state.books.filter(book => book._id !== id);
+        this.setState({ books: filteredBooks });
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
-}
 
   putBooks = async (id, updateBookObj) => {
     if (this.props.auth0.isAuthenticated) {
@@ -73,19 +77,23 @@ class BestBooks extends React.Component {
         headers: { "Authorization": `Bearer ${jwt}` },
         method: 'put',
         baseURL: process.env.REACT_APP_SERVER_URL,
-        url: './books'
+        url: '/books',
+        data: updateBookObj,
+        params: {
+          id: id
+        }
       }
-    try {
-      let results = await axios.put(config, updateBookObj);
-      let filteredBooks = this.state.books.filter(book => book._id !== id);
-      this.setState({ books: filteredBooks });
-      let updatedBooksArr = [...this.state.books, results.data]
-      this.setState({ books: updatedBooksArr });
-    } catch (e) {
-      console.error(e);
+      try {
+        let results = await axios.put(config);
+        let filteredBooks = this.state.books.filter(book => book._id !== id);
+        this.setState({ books: filteredBooks });
+        let updatedBooksArr = [...this.state.books, results.data]
+        this.setState({ books: updatedBooksArr });
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
-}
 
   closeModal = () => {
     this.setState({ showPostModal: false })
@@ -125,4 +133,4 @@ class BestBooks extends React.Component {
   }
 }
 
-export default BestBooks;
+export default withAuth0(BestBooks);

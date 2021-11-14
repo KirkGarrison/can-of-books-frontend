@@ -3,7 +3,6 @@ import Header from './Header';
 import Footer from './Footer';
 import BestBooks from './BestBooks';
 import LoginButton from './LoginButton'
-import LogoutButton from './LogoutButton';
 // import Login from './Login';
 import Profile from './Profile';
 import { withAuth0 } from '@auth0/auth0-react';
@@ -22,18 +21,17 @@ class App extends React.Component {
       <>
         <Router>
           <Header />
-          <LoginButton />
           <Switch>
-            {this.props.auth0.isAuthenticated &&
+            {this.props.auth0.isAuthenticated ?
               <>
                 <Route exact path="/">
-                  <BestBooks />
+                  <BestBooks /> 
                 </Route>
                 <Route exact path="/profile">
                   <Profile />
                 </Route>
-                <LogoutButton />
               </>
+              : <LoginButton />
             }
           </Switch>
           <Footer />
